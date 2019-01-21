@@ -1,0 +1,172 @@
+<script type="text/javascript">
+$(document).ready(function(){
+		ajaxDelay();
+});
+	function responseToPost(postId){
+		var popup=$("#popup");
+		$.ajax({
+	                url: "/posts/responseToPost/"+postId, 
+	                type: "GET",
+	                async: true
+	            }).then(function (data, response) {
+					console.log("passed to controller");
+					console.log(data);
+					if (Object.keys(data).length != 0){
+						var div = $("#response"+postId);
+						popup.html($("#postUsersTemplate").tmpl(data));
+						
+						popup.dialog({ modal: true,width:700,buttons: {
+								ok: function() {	
+								$( this ).dialog( "close" );
+								}
+							}
+						});
+					}
+					else{
+						popup.html("Sorry!!! No responses found");
+						popup.dialog({ modal: true,width:200,buttons: {
+								ok: function() {	
+								$( this ).dialog( "close" );
+								}
+							}});
+					}		
+				}).catch(function (response, status, xhr) {
+	                alert(response +" "+status + xhr);
+	     });		
+	}
+	function message(receiverId, postId, url){
+		var chatBox = $("#chatBox"+receiverId);
+		chatBox.html(" ");
+		var div = $("<div/>");
+		div.html(" ");
+		console.log(url);
+			function refreshMesgs(){
+				console.log("hello");
+				div.html(" ");
+				$.ajax({
+			                url: "/chats/retrieve/"+receiverId+"/"+postId, 
+			                type: "GET"
+			            }).then(function (data, response) {
+							console.log("passed to controller");
+							console.log(data);
+							$(data).each(function (index, element) {
+								$(element).each(function (index, ele) {
+									var left = $("<div class='left'/>");
+									var right = $("<div class='right'/>");
+									if (ele.recipient == receiverId){
+										right.append($("<a/>").append(ele.content));
+										div.append(right);
+									}else{
+										left.append($("<a/>").append(ele.content));
+										div.append(left);
+									}	
+								});
+							});
+			     	});
+		   }
+	   refreshMesgs();
+	    var sum = receiverId+postId;
+	     var textBox=$("<input type='text' id='"+sum+"'/>");
+	     var formDiv =$('<div />');//$("<div />"); 
+	     var flag = false;
+	     var interval;
+					div.append($("<br/>"));
+					formDiv.append(textBox);
+					var msg = $('input[id="'+receiverId+'"]').val();
+					var sendButton = $("<input type='submit' onclick='sendMessages("+receiverId +","+ postId +")' value='Send' class='btn btn-deault' />");
+					formDiv.append(sendButton);
+					chatBox.append(div);
+					chatBox.dialog({ modal: false,
+						width:350,
+						height:200,
+						dialogClass: 'fixed-dialog',
+						close: function () { clearInterval(interval);} ,
+						open: function (event, ui) {
+								$(this).animate({scrollTop: $(this).scrollTop() + 600});
+								interval = setInterval(function(){
+									refreshMesgs();
+									flag=true;
+									chatBox.animate({scrollTop: $(this).scrollTop() + 600});  
+									}, 5000);
+							},
+						buttons: {
+								close: {
+							         id: "chatingClose"+sum,
+							      } 
+							}	
+					});
+					$("#chatingClose"+sum).html(formDiv);
+	}
+	function sendMessages(receiverId, postId){
+		var sum = receiverId+postId;
+		var msg = document.getElementById(sum).value;
+		var msgBox = $("input#"+sum);
+		console.log(msgBox);
+		console.log(msg);
+		console.log("sendMessages");
+		if (msg){
+			var chatData = {
+				receiver : receiverId,
+				content : msg,
+				postid : postId
+			};
+			msgBox.val("");	
+			$.ajax({
+		                url: "/chats/save",
+		                type: "GET",
+		                async: true,
+		                dataType: "JSON",
+		                multipart: true,
+	            		contentType: "application/json",
+	            		data: {
+	           				chat: JSON.stringify(chatData)
+	        			}
+		            }).then(function (data, response) {
+						console.log("passed to controller");
+						console.log(data);
+					}).catch(function (response, status, xhr) {
+		                alert(response +" "+status + xhr);
+		     });
+	     }	
+	}
+</script>
+<script type="text/x-jQuery-tmpl" id="postUsersTemplate">
+	<div class="popup">
+		<ul>
+			<li>
+				<div>
+					<img src=${user.image.url} class="image"/>
+					<p class="labal">Name:<b class="item">${user.name}</b> </p>
+					<p class="labal">Address:<b><a class="item" href="http://maps.google.com/?q=${user.address}" target="_blank">${user.address}</a></b></p>
+					<p class="labal">Phone:<a class="item" href="tel:${user.phone}">${user.phone}</a></p>
+					<p><input type="button" class="btn btn-default" value="chat" onclick="message(${user.id}, ${postId}, '${user.image.url}')" /></p>
+				</div>
+			</li>	
+		</ul>
+		<div id="chatBox${user.id}" title="${user.name}" >
+			<div id="chat${user.id}"></div>
+		</div>
+	</div>
+</script>
+<div  class="yield">
+	<div class="text-center"><%= link_to 'Add a post', new_post_path, class: 'btn btn-default' %></div>
+	<div class="pagination text-center"><%= will_paginate @posts, class: 'paginate' %></div>
+	<div class="list">
+		<ul><% count = 0 %>
+			<% @posts.each do |post| %>
+			<li>
+				<div><b>Description:</b><%= post.description %></div>
+				<div><b>Category: </b><%= post.category.name %></div>
+				<div><b>Job: </b><%= post.job.name %></div>
+				<div><%= link_to "Edit", edit_post_path(post), class: 'btn btn-default' %>
+				<%= link_to "Delete", post_path(post), class: 'btn btn-default', data: {:confirm => "Are you sure?"}, :method=>:delete %></div>
+				<div><button onclick="responseToPost(<%= post.id %>)" class= "btn btn-default">Responses (<%= @response_count[count]%>)</button> </div>
+				<% count = count + 1 %>
+				<div id ="response<%=post.id%>"></div>
+				<div id="popup" title="Responses"  style="display: none;"></div>
+			</li>
+			<% end %>
+		</ul>
+	</div>
+			<%= image_tag "loading.gif", id: 'loading'%>
+</div>

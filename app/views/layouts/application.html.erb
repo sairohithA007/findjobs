@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Find Jobs</title><!--Jobs-->
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+ <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
+  </head>
+
+  <body> <!--  class="text-center" -->
+  
+	  <div class="topRibbon top text-center">	
+	  	<div class="topLeft">
+	  		<p class="title">Find</p>  <!--  Jobs -->
+		  	</div>
+	  	<div class="topRight">
+			  	<% if user_signed_in?%>
+			  	<div class="">
+				  <div class= "padding btn btn-default" ><%= image_tag (current_user.image_url), class: 'profileImage' %><%= link_to current_user.name, posts_path, :method => :get%></div>
+				  <%= link_to 'Home', posts_homepage_path, class: 'btn btn-default padding'%>
+				  <%=link_to 'My Profile', edit_user_registration_path, :method=>:get, class:'padding btn btn-default' %>
+				  <%= link_to 'Logout', destroy_user_session_path, id: 'logout',:method=>:delete, class: 'padding btn btn-default' %>
+			  	</div>
+			  	 <% end %>
+	  	</div>
+	  </div>
+ 
+	
+  	 <p class="text-center"><%= notice %></p>
+       <p class="text-center"><%= alert %></p>
+       <br />
+       <div><%= yield %></div>
+       <!-- <div id="transp"></div> -->
+     
+    	<div class="text-center footer"><p class="footerText">Good to see you here..</p><p>	(c) Copyright 2016. All Rights Reserved. </p></div>
+    		
+  </body>
+</html>

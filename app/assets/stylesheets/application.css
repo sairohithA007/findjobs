@@ -1,0 +1,155 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+body{
+ margin-left:auto;
+ margin-right:auto; 
+background-color: #87CEFA;
+}
+.yield{
+	width:70%;
+	min-height:1200px;
+	max-height:5000px;
+	margin-left:auto;
+	margin-right:auto;
+	padding:70px;
+	box-shadow:#D3D3D3 0px 5px 5px 5px;
+}
+.top{
+	width:70%;
+	height:45px;
+	margin-left:auto;
+	margin-right:auto;
+	background-color: #0087cb;
+	position: fixed;
+	left:15%;
+	right:auto;
+    top: 0px;
+}
+.topRight .padding{
+	padding:8px;
+	margin:5px;
+}
+
+.profileImage{
+	width:25px;
+	height:20px;
+}
+
+#loading{
+	position:fixed;
+	top:300px;
+	left:650px;
+}
+#transp {
+    position:fixed;
+    left:228px;
+    top:45px;
+    background: rgba(169,169,169,.5);
+    width:70%;
+    height:715px;
+}
+.search{
+	width:50%;
+	margin-left:auto;
+	margin-right:auto;
+	position:fixed;
+	top:75px;
+	float:right;
+	background-color: #0087cb;
+}
+a:hover{
+	cursor: pointer;
+}
+.topRibbon{
+	width:70%;
+	float:left;
+}
+.topLeft{
+	width:30%;
+	float:left;
+}
+.title{
+	color:#ffffff;
+	padding:10px;
+	font-family: 'Fertigo', serif;
+    font-size: 25px;
+}
+.topRight{
+	width:60%;
+	float:right;
+}
+.pagination{
+	width:100%;
+	padding:5px;
+}
+.pagination .paginate{
+	width:100%;
+	margin-left:auto;
+	margin-right:auto;
+}
+.previous_page, .next_page{
+	padding:5px;
+	border: 1px solid;
+    border-radius: 25px;
+    margin:4px;
+}
+
+.previous_page ~ a, em{
+	padding:4px;
+	border: 1px solid;
+	border-radius: 25px;
+}
+.previous_page a{
+	
+}
+.userForm{
+	width:50%;
+	margin-left:auto;
+	margin-right:auto;
+}
+.footerText{
+	width:60%;
+	color:#ffffff;
+	margin-left:auto;
+	margin-right:auto;
+}
+.fixed-dialog{
+  position: fixed;
+  top: 50px;
+  left: 50px;
+}
+
+.ui-dialog-buttonset input{
+	float:left;
+	margin: 9px;
+}
+
+.ui-dialog-buttonset button{
+	float:right;
+}
+.footer{
+	width:70%;
+	height:50px;
+	background-color: #0087cb;
+	position: fixed;
+	left:15%;
+	right:auto;
+    bottom: 0px;
+}
+.fullWidth{
+	margin-left:auto;
+	margin-right:auto;
+}

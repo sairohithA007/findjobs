@@ -1,0 +1,78 @@
+
+
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		ajaxDelay();
+		console.log("ready");
+		$("#addNewJob").hide();
+    $("#add").click(function(){
+        $("#addNewJob").toggle();
+    });
+	});	
+	
+	function saveJob(){
+    	var job = document.getElementById("jobTitle").value;
+    	console.log(job);
+    	var obj = {};
+    	$.ajax({
+	                url: "/jobs/add/"+job, 
+	                type: "GET",
+	                async: true
+	            }).then(function (data, response) {
+					console.log("passed to cart controller");
+					console.log(data);
+					if (data == 1){
+						window.location = "/posts/new";
+					}
+
+				}).catch(function (response, status, xhr) {
+	                alert(response +" "+status + xhr);
+	     });
+    }
+
+
+</script>
+<div  class="yield">
+	<h1>Add a Post</h1>
+<%= form_for @post do |f| %>
+ 
+  <% if @post.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= pluralize(@post.errors.count, "error") %> prohibited
+        this article from being saved:
+      </h2>
+      <ul>
+        <% @post.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+<p class="form-group">
+    <%= f.label :job_id%><br>
+    <%= f.select("job_id", options_from_collection_for_select(@jobs, "id", "name", @post.job_id), {},{ :class => 'form-control col-sm-10'})%> <input type="button" id="add" class= "btn btn-default" value="Add a job?" />
+    <div id="addNewJob">
+    	<input type="text", id = "jobTitle" />
+    	<input type="button" onclick="saveJob()" value="Add" class= "btn btn-default" />
+    </div>
+</p> 
+  <p class="form-group">
+    <%= f.label :description %><br>
+    <%= f.text_area :description, class:'form-control' %>
+  </p>
+ 
+  <p class="form-group">
+    <%= f.label :category_id %><br>
+    <%= f.select("category_id", options_from_collection_for_select(@categories, "id", "name", @post.category_id), {},{ :class => 'form-control'})%>
+  </p>
+  
+  <p >
+    <%= f.submit 'post', :class => 'btn btn-default'%>
+  </p>
+ 
+<% end %>
+
+
+</div>

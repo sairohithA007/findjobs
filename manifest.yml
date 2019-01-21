@@ -1,0 +1,11 @@
+applications:
+- path: .
+  memory: 256M
+  instances: 1
+  domain: mybluemix.net
+  name: findjobs
+  host: findjobs
+  disk_quota: 1024M
+  command: bundle exec rake db:seed && bundle exec rake db:migrate && bundle exec rails s -p $PORT
+  services:
+    - Compose for PostgreSQL-qu
